@@ -1,0 +1,9 @@
+bcrypt
+python-jose
+fastapi
+PyJWT
+passlib
+SecretStorage
+peewee
+python-dotenv
+python-multipart
