@@ -1,16 +1,34 @@
 
 import "./App.css";
-import InputField from "./components/InputField";
+import React, {useEffect} from  'react'
+import {InputField, Navbar} from "./components";
 import TodoList from "./components/TodoList";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useAppSelector, useAppDispatch } from "./hooks";
 
 import { addTodo, removeTodo } from "./reducers/todoSlice";
+import { loginAuth } from "./reducers/authSlice";
+import Signup from "./components/Signup";
+
 const App: React.FC = () => {
   const allTodos = useAppSelector((state) => state.todoReducer);
+  const token = useAppSelector((state) => state.authReducer.refresh_token)
   const {todos, progressTodos, completedTodos} = allTodos
   const dispatch = useAppDispatch();
 
+
+  useEffect(() => {
+    let getToken = localStorage.getItem('token')
+    if(getToken === null || getToken === undefined){
+      console.log("no token")
+    } else {
+      console.log("there is token")
+      console.log(getToken)
+      dispatch(loginAuth({refresh_token: getToken}))
+    }
+    
+  }, [])
+  
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) return;
@@ -59,6 +77,7 @@ const App: React.FC = () => {
   };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      <Navbar />
       <div className="App">
         <span className="heading">TaskcyTodo</span>
 
@@ -66,6 +85,7 @@ const App: React.FC = () => {
         {/*  TODO: Pending work */}
         <TodoList />
       </div>
+      <Signup />
     </DragDropContext>
   );
 };

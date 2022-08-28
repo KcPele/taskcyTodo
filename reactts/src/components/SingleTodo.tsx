@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Todo } from "../model";
-import "./styles.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import { Draggable } from "react-beautiful-dnd";

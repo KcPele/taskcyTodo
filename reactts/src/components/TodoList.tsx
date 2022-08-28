@@ -1,6 +1,5 @@
 import React from 'react'
 
-import "./styles.css"
 import SingleTodo from "./SingleTodo"
 import { Droppable } from 'react-beautiful-dnd';
 import { useAppSelector } from "../hooks";
