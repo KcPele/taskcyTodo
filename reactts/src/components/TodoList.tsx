@@ -1,17 +1,13 @@
 import React from 'react'
-import { Todo } from '../model'
+
 import "./styles.css"
 import SingleTodo from "./SingleTodo"
 import { Droppable } from 'react-beautiful-dnd';
-interface Props {
-    todos: Todo[];
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-    completedTodos: Todo[];
-    progressTodos: Todo[];
-    setCompletedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-    setProgressTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-}
-const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, progressTodos, setCompletedTodos, setProgressTodos}) => {
+import { useAppSelector } from "../hooks";
+
+const TodoList: React.FC = () => {
+  const allTodos = useAppSelector((state) => state.todoReducer)
+  const { todos, progressTodos, completedTodos} = allTodos
   return (
     <div className="container">
       <Droppable droppableId='TodosList' >
@@ -22,7 +18,7 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, progressTod
           
           {
             todos.map((todo, index) => (
-                <SingleTodo index={index} key={todo.id} todo={todo} todos={todos} setTodos={setTodos}/>
+                <SingleTodo index={index} key={todo.id} todo={todo}   comingFrom="todos"/>
             ))
           }
            {provided.placeholder}
@@ -40,7 +36,7 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, progressTod
       
       {
         progressTodos.map((todo, index) => (
-            <SingleTodo index={index} key={todo.id} todo={todo} todos={progressTodos} setTodos={setProgressTodos} />
+            <SingleTodo index={index} key={todo.id} todo={todo} comingFrom="progressTodos"/>
         ))
       }
       {provided.placeholder}
@@ -57,7 +53,7 @@ const TodoList: React.FC<Props> = ({todos, setTodos, completedTodos, progressTod
       
       {
         completedTodos.map((todo, index) => (
-            <SingleTodo index={index} key={todo.id} todo={todo} todos={completedTodos} setTodos={setCompletedTodos}/>
+            <SingleTodo index={index} key={todo.id} todo={todo}  comingFrom="completedTodos"/>
         ))
       }
        {provided.placeholder}

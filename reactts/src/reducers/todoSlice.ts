@@ -1,36 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit"; 
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { Todo } from "../model";
+import {  allStateTypeTodos } from "../model";
 
-const initialState: Todo[] = [
-    {
-        id: 243434355,
-        todo: "God is good",
-        isDone: false
+import { add, edit, remove, done } from "../utils";
 
-    }
-]
-interface EditTodo {
-    id: number,
-    todo: string
-}
+
+
+const initialState = {
+    todos: [],
+    progressTodos: [],
+    completedTodos: []
+} as  allStateTypeTodos
+
+
+
 export const todoSlice = createSlice({
     name: 'todo',
     initialState,
     reducers: {
-        addTodo: (state, action: PayloadAction<Todo>) => {
-            const {payload} = action
-            return [...state, {id: payload.id, todo: payload.todo, isDone: payload.isDone}]
-        },
-        editTodo: (state, action: PayloadAction<EditTodo>) => {
-            const {id, todo} = action.payload
-            return state.map(value => (value.id === id ? {...value, todo: todo} : value))
-        },
-        removeTodo: (state, action: PayloadAction<{id: number}>) => {
-            return state.filter(todo => todo.id !== action.payload.id)
-        }
+        addTodo: add,
+        editTodo: edit,
+        removeTodo: remove,
+        doneTodo: done,
     }
 })
 
-export const {addTodo, editTodo, removeTodo} = todoSlice.actions
+export const {addTodo, editTodo, removeTodo, doneTodo} = todoSlice.actions
 export default todoSlice.reducer

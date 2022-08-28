@@ -1,21 +1,15 @@
 import React, { useRef, useState } from 'react'
-import { useDispatch } from "react-redux"
+import { useAppDispatch } from '../hooks';
 import { addTodo } from '../reducers/todoSlice';
 import "./styles.css"
-interface Props {
-    todo: string, 
-    setTodo: React.Dispatch<React.SetStateAction<string>>;
-    handleAdd: (e: React.FormEvent) => void;
-    
 
-}
 const InputField: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const inputRef = useRef<HTMLInputElement>(null)
     const [todo, setTodo] = useState<string>("")
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        dispatch(addTodo({id: Date.now(), todo: todo, isDone: false}))
+        dispatch(addTodo({id: Date.now(), todo: todo, isDone: false, comingFrom: 'todos'}))
         setTodo("")
     }
   return (

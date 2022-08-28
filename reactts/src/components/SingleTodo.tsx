@@ -4,31 +4,23 @@ import "./styles.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import { Draggable } from "react-beautiful-dnd";
+import { useAppDispatch } from '../hooks';
+import { editTodo as editTodoReducer, removeTodo, doneTodo } from '../reducers/todoSlice';
 interface Props {
   todo: Todo;
-  todos: Todo[];
+  comingFrom: string;
   index: number;
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+
 }
-const SingleTodo: React.FC<Props> = ({ todo, todos, index, setTodos }) => {
+const SingleTodo: React.FC<Props> = ({ todo, index, comingFrom }) => {
+  const dispatch = useAppDispatch()
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
-  const handleDone = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-      )
-    );
-  };
-  const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
+
 
   const handleSubmit = (e: React.FormEvent, id: number) => {
     e.preventDefault();
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
-    );
+    dispatch(editTodoReducer({id, todo: editTodo, comingFrom}))
     setEdit(false);
   };
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,11 +63,11 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, index, setTodos }) => {
               {" "}
               <AiFillEdit />
             </span>
-            <span onClick={() => handleDelete(todo.id)} className="icon">
+            <span onClick={() => dispatch(removeTodo({id: todo.id, comingFrom}))} className="icon">
               {" "}
               <AiFillDelete />
             </span>
-            <span onClick={() => handleDone(todo.id)} className="icon">
+            <span onClick={() => dispatch(doneTodo({id: todo.id,  comingFrom}))} className="icon">
               <MdDone />
             </span>
           </div>

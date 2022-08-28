@@ -1,74 +1,73 @@
-import React, {useState, useEffect} from "react"
-import './App.css';
+
+import "./App.css";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
-import { Todo } from "./model";
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { useSelector } from 'react-redux'
-import { RootState } from "./store/store";
-const  App: React.FC = () => {
-  const todos1 = useSelector((state: RootState) => state.todoReducer)
-   const [todo, setTodo] = useState<string>("")
-   const [todos, setTodos] = useState<Todo[]>([])
-   const [completedTodos, setCompletedTodos] = useState<Todo[]>([])
-   const [progressTodos, setProgressTodos] = useState<Todo[]>([])
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { useAppSelector, useAppDispatch } from "./hooks";
 
-   useEffect(() => {
-     setTodos(todos1)
-   }, [todos1])
+import { addTodo, removeTodo } from "./reducers/todoSlice";
+const App: React.FC = () => {
+  const allTodos = useAppSelector((state) => state.todoReducer);
+  const {todos, progressTodos, completedTodos} = allTodos
+  const dispatch = useAppDispatch();
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+    if (!destination) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+
    
-   const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault()
-     if(todo){
-      setTodos([...todos, {id: Date.now(), todo, isDone: false}])
-      setTodo("")
-     }
+
+    if (source.droppableId === "TodosList") {
+      let { id, todo, isDone } = todos[destination.index];
+
+      if (destination.droppableId === "ProgressList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "progressTodos" }));
+      } else if (destination.droppableId === "CompleteList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "completedTodos" }));
+      }
+      dispatch(removeTodo({ id: todos[source.index].id, comingFrom: "todos" }));
+    } else if (source.droppableId === "ProgressList") {
+      let { id, todo, isDone } = progressTodos[destination.index];
     
+      if (destination.droppableId === "TodosList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "todos" }));
+      } else if (destination.droppableId === "CompleteList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "completedTodos" }));
+      }
 
-   }
-   const onDragEnd = (result: DropResult) => {
-        const {source, destination } = result
-        if(!destination) return
-        if(destination.droppableId === source.droppableId && destination.index === source.index) return
+      dispatch(
+        removeTodo({ id: progressTodos[source.index].id, comingFrom: "progressTodos" })
+      );
+    } else {
+      let { id, todo, isDone } = completedTodos[destination.index];
 
-        let add, active = todos, complete = completedTodos, progress = progressTodos
+      if (destination.droppableId === "ProgressList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "progressTodos" }));
+      } else if (destination.droppableId === "TodosList") {
+        dispatch(addTodo({ id, todo, isDone, comingFrom: "todos" }));
+      }
 
-        if(source.droppableId === 'TodosList') {
-          add = active[source.index]
-          active.splice(source.index, 1)
-        } else if (source.droppableId === 'ProgressList'){
-          add = progress[source.index]
-          progress.splice(source.index, 1)
-
-        } else {
-          add = complete[source.index]
-          complete.splice(source.index, 1)
-        }
-
-        if(destination.droppableId === 'TodosList') {
-          active.splice(destination.index, 0, add)
-        } else if (destination.droppableId === 'ProgressList'){
-          progress.splice(destination.index, 0, add)
-
-        } else {
-          complete.splice(destination.index, 0, add)
-        }
-
-        setCompletedTodos(complete)
-        setProgressTodos(progress)
-        setTodos(active)
-   }
+      dispatch(
+        removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
+      );
+    }
+  };
   return (
-    <DragDropContext onDragEnd={onDragEnd} >
-    <div className="App">
-      <span className="heading">TaskcyTodo</span>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="App">
+        <span className="heading">TaskcyTodo</span>
 
-      <InputField />
-    {/*  TODO: Pending work */}
-      <TodoList todos={todos} setTodos={setTodos} completedTodos={completedTodos} progressTodos={progressTodos}  setCompletedTodos={setCompletedTodos} setProgressTodos={setProgressTodos} />
-    </div>
-    </DragDropContext >
+        <InputField />
+        {/*  TODO: Pending work */}
+        <TodoList />
+      </div>
+    </DragDropContext>
   );
-}
+};
 
 export default App;
