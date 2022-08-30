@@ -24,9 +24,9 @@ config = dotenv_values(".env")
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days
-REFRESH_SECRET_KEY = config['REFRESH_SECRET_KEY']
-SECRET_KEY = config['SECRET_KEY']
-ALGORITHM = config['SECRET_ALGORITHM']
+REFRESH_SECRET_KEY = os.getenv('REFRESH_SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
+ALGORITHM = "HS256"
 
 
 class Token(BaseModel):

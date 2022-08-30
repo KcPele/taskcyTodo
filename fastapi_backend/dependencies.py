@@ -4,9 +4,6 @@ import database
 import models
 from database import db_state_default
 
-database.db.connect()
-database.db.create_tables([models.User, models.Todo])
-database.db.close()
 
 
 async def reset_db_state():
