@@ -2,34 +2,39 @@ import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgClose } from "react-icons/cg";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { logoutAuth } from "../reducers/authSlice";
+import { logoutAuth, toggleMode } from "../reducers/authSlice";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const token = useAppSelector(state => state.authReducer.refresh_token)
   const dispatch = useAppDispatch()
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  const setToggle = (mode: string) => {
+    dispatch(toggleMode({mode}))
+  }
   return (
     <nav className="app__navbar section__padding">
       <div className="navbar__container ">
         <div className="navbar__container-logo">
           
-          <h1 className="navbar__container-logo_header">TaskcyTodo</h1>
+          <Link to="/"><h1 className="navbar__container-logo_header">TaskcyTodo</h1></Link>
         </div>
       </div>
       <div className="navbar__auth">
         {
           token ? (
-            <a className="navbar__auth-signup" onClick={() => dispatch(logoutAuth())} href="#">
+            <button className="navbar__auth-signup" onClick={() => dispatch(logoutAuth())}>
               Logout
-            </a>
+            </button>
           ) : (
             <>
-            <a className="navbar__auth-login" href="#">
+            <Link className="navbar__auth-login" onClick={() => setToggle("login")} to='/login'>
             Login
-          </a>
-          <a className="navbar__auth-signup" href="#">
+          </Link>
+          <Link className="navbar__auth-signup" onClick={() => setToggle("signup")} to='/signup'>
             Sign Up
-          </a>
+          </Link>
           </>
           )
         }
@@ -38,7 +43,7 @@ const Navbar = () => {
       </div>
       <div className="app__navbar-smallscreen">
         <GiHamburgerMenu
-          color="#4A4A50"
+          color="#fff"
           fontSize={27}
           className="overlay__open"
           onClick={() => setToggleMenu(true)}
@@ -53,17 +58,17 @@ const Navbar = () => {
             <div className="navbar__auth-smallscreen">
             {
           token ? (
-            <a className="navbar__auth-smallscreen__signup" onClick={() => dispatch(logoutAuth())} href="#">
+            <button  className="navbar__auth-smallscreen__button" onClick={() => dispatch(logoutAuth())}>
               Logout
-            </a>
+            </button>
           ) : (
             <>
-              <a className="navbar__auth-smallscreen__login" href="#">
+              <Link className="navbar__auth-smallscreen__login navbar__auth-smallscreen__signup" onClick={() => setToggle("login")} to="/login">
                 Login
-              </a>
-              <a className="navbar__auth-smallscreen__signup" href="#">
+              </Link>
+              <Link className="navbar__auth-smallscreen__signup" onClick={() => setToggle("signup")} to="/signup">
                 Sign Up
-              </a>
+              </Link>
            </>
           )
 }

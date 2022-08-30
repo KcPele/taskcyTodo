@@ -5,17 +5,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface initialStateI {
    
     refresh_token: string;
+    mode: string
   
 }
 const initialState =  {
-    refresh_token: ""
+    refresh_token: "",
+    mode: "login"
 } as initialStateI
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        loginAuth: (state: initialStateI, action: PayloadAction<initialStateI>) => {
+        loginAuth: (state: initialStateI, action: PayloadAction<{refresh_token: string}>) => {
             const { refresh_token } = action.payload
            
             localStorage.removeItem('token')
@@ -30,9 +32,14 @@ export const authSlice = createSlice({
              state.refresh_token = ""
         
             return state
+        },
+        toggleMode: (state: initialStateI, action: PayloadAction<{mode: string}>) => {
+            const { mode } = action.payload
+            state.mode = mode
+            return state
         }
     }
 })
 
-export const { loginAuth, logoutAuth} = authSlice.actions
+export const { loginAuth, logoutAuth, toggleMode} = authSlice.actions
 export default authSlice.reducer

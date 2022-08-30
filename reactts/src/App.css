@@ -1,15 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Neucha&display=swap");
 
-.App {
+.app {
   width: 100vw;
-  min-height: 100vh;
+  min-height: 100vh; 
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #2f74c0;
   font-family: "Neucha", cursive;
-}
+  /* overflow-y: scroll; */
+    background: #2C497F;
+    
 
+}
+*{
+  box-sizing: border-box;
+}
 .heading {
   text-transform: uppercase;
   font-size: 40px;
@@ -26,6 +32,11 @@
   }
 }
 
+body {
+  margin: 0;
+  overflow: scroll;
+  background: #2C497F;
+}
 
 li {
   list-style: none;
@@ -70,9 +81,8 @@ a {
   display: flex;
 }
 
-body {
-  background: #2f74c0;
-}
+
+
 .app__btn{
   padding: 0.4rem 0;
 }
@@ -88,6 +98,10 @@ body {
 
 .app__navbar {
   /* padding: 15px 0; */
+  /* z-index: 1000; */
+  background-color: rgb(255, 255, 255, 0.13);
+  box-shadow: 0 0 16px 9px rgba(0,0,0,0.07);
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -108,7 +122,6 @@ body {
     align-items: center;
 }
 .navbar__container-logo_header {
-  max-width: 96px;
   max-height: 35px;
   display: inline-block;
   font-weight: 700;
@@ -130,7 +143,7 @@ body {
   align-items: center;
 }
 
-.navbar__auth a{
+.navbar__auth a, .navbar__auth button{
   padding: 10px 33px;
   font-size: 1rem;
   line-height: 20px;
@@ -158,7 +171,7 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #2f74c0;
+  background: #2C497F;
   transition: 0.5s ease;
   flex-direction: column;
   text-align: center;
@@ -174,13 +187,18 @@ cursor: pointer;
   color: #fff;
   cursor: pointer;
   position: absolute;
+
   top: 26px;
   right: 50px;
 }
 
+.navbar__auth-smallscreen__button {
+  background: inherit;
+  border: none;
+  outline: none;
+}
 
-
- .navbar__auth-smallscreen a{
+ .navbar__auth-smallscreen a, .navbar__auth-smallscreen__button{
   margin: 2rem;
   cursor: pointer;
   color: #fff;
