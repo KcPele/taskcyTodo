@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgClose } from "react-icons/cg";
 import { useAppSelector, useAppDispatch } from "../hooks";
@@ -10,8 +10,13 @@ const Navbar = () => {
   const dispatch = useAppDispatch()
   const [toggleMenu, setToggleMenu] = useState(false);
 
-  const setToggle = (mode: string) => {
+  const handleLogout = () => {
+    dispatch(logoutAuth())
+    setToggleMenu(false)
+  }
+  const handleAuth = (mode: string) => {
     dispatch(toggleMode({mode}))
+    setToggleMenu(false)
   }
   return (
     <nav className="app__navbar section__padding">
@@ -29,10 +34,10 @@ const Navbar = () => {
             </button>
           ) : (
             <>
-            <Link className="navbar__auth-login" onClick={() => setToggle("login")} to='/login'>
+            <Link className="navbar__auth-login" onClick={() => handleAuth("login")} to='/login'>
             Login
           </Link>
-          <Link className="navbar__auth-signup" onClick={() => setToggle("signup")} to='/signup'>
+          <Link className="navbar__auth-signup" onClick={() => handleAuth("signup")} to='/signup'>
             Sign Up
           </Link>
           </>
@@ -58,15 +63,15 @@ const Navbar = () => {
             <div className="navbar__auth-smallscreen">
             {
           token ? (
-            <button  className="navbar__auth-smallscreen__button" onClick={() => dispatch(logoutAuth())}>
+            <button  className="navbar__auth-smallscreen__button" onClick={handleLogout}>
               Logout
             </button>
           ) : (
             <>
-              <Link className="navbar__auth-smallscreen__login navbar__auth-smallscreen__signup" onClick={() => setToggle("login")} to="/login">
+              <Link className="navbar__auth-smallscreen__login navbar__auth-smallscreen__signup" onClick={() => handleAuth("login")} to="/login">
                 Login
               </Link>
-              <Link className="navbar__auth-smallscreen__signup" onClick={() => setToggle("signup")} to="/signup">
+              <Link className="navbar__auth-smallscreen__signup" onClick={() => handleAuth("signup")} to="/signup">
                 Sign Up
               </Link>
            </>

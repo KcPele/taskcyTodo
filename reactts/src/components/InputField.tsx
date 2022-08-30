@@ -12,7 +12,7 @@ const InputField: React.FC = () => {
     const [todo, setTodo] = useState<string>("")
 
     const { getTodos } = useGet()
-    const { res, handleRequest, isLoading } = useAxios()
+    const { error, handleRequest, isLoading } = useAxios()
     const handleSubmit = async (e: React.FormEvent) => {
 
         e.preventDefault()
@@ -21,12 +21,13 @@ const InputField: React.FC = () => {
         setTodo("")
         toast.info("you need to login to save your list")
         return
-      }
+      } else {
        handleRequest({postData: {todo}, path: `todos`, method: 'POST'})
-        if(res){
+        if(!error){
           toast.success("todo created")
         }
-         await getTodos()
+          getTodos()
+      }
         setTodo("")
        
        

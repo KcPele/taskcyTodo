@@ -8,7 +8,7 @@ import { useAppSelector, useAppDispatch } from "./hooks";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { addTodo, removeTodo } from "./reducers/todoSlice";
 import { loginAuth } from "./reducers/authSlice";
-import {  ToastContainer } from 'react-toastify';
+import { toast,  ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -46,7 +46,7 @@ const App: React.FC = () => {
     }
       gettingTodos()
   
-  }, [token, todos])
+  }, [token, todos, completedTodos])
   
   const onDragEnd = async (result: DropResult) => {
     const { source, destination } = result;
@@ -62,57 +62,37 @@ const App: React.FC = () => {
     if (source.droppableId === "TodosList") {
       let { id, todo, isDone } = todos[destination.index];
 
-      if (destination.droppableId === "ProgressList") {
-        dispatch(addTodo({ id, todo, isDone, comingFrom: "progressTodos" }));
-      } else if (destination.droppableId === "CompleteList") {
+      if (destination.droppableId === "CompleteList") {
         if(!token) {
           dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
         } else {
-          dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
           await handleRequest({postData: {id, isDone: true}, path: `todos/${id}`, method: 'PATCH'})
+          // dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
+          toast.success("Todo is now completed. Congratulation")
           await getTodos()
         }
       }
       dispatch(removeTodo({ id: todos[source.index].id, comingFrom: "todos" }));
-    } else if (source.droppableId === "ProgressList") {
-      let { id, todo, isDone } = progressTodos[destination.index];
-    
-      if (destination.droppableId === "TodosList") {
-        dispatch(addTodo({ id, todo, isDone, comingFrom: "todos" }));
-      } else if (destination.droppableId === "CompleteList") {
-        if(!token) {
-          dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
-        } else {
-          dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
-          await handleRequest({postData: {id, isDone: true}, path: `todos/${id}`, method: 'PATCH'})
-          await getTodos()
-        }
-      }
-
-      dispatch(
-        removeTodo({ id: progressTodos[source.index].id, comingFrom: "progressTodos" })
-      );
     } else {
       let { id, todo } = completedTodos[destination.index];
 
-      if (destination.droppableId === "ProgressList") {
-        dispatch(addTodo({ id, todo, isDone: false, comingFrom: "progressTodos" }));
-      } else if (destination.droppableId === "TodosList") {
+      if (destination.droppableId === "TodosList") {
         if(!token) {
           dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
           
         } else {
-          dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
           await handleRequest({postData: {id, isDone: false}, path: `todos/${id}`, method: 'PATCH'})
+          // dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
+          toast.info("Todo is no completed")
           await getTodos()
         }
      
-     
       }
       
-      dispatch(
-        removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
-      );
+         dispatch(
+           removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
+         );
+      
     }
   };
   return (
@@ -120,7 +100,7 @@ const App: React.FC = () => {
      
       <BrowserRouter >
       <Navbar />
-      <ToastContainer limit={2}/>
+      <ToastContainer limit={4}/>
       <Routes >
       <Route path="/" element={
       <div className="app">
