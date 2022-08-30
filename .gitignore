@@ -10,7 +10,7 @@ log.txt
 __pycache__
 # testing
 /coverage
-
+./build
 # production
 /build
 
