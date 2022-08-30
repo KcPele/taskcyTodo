@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Neucha&display=swap");
 
 .app {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh; 
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #2f74c0;
   font-family: "Neucha", cursive;
-  /* overflow-y: scroll; */
+
     background: #2C497F;
     
 

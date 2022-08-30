@@ -65,33 +65,39 @@ const App: React.FC = () => {
       if (destination.droppableId === "CompleteList") {
         if(!token) {
           dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
+          dispatch(removeTodo({ id: todos[source.index].id, comingFrom: "todos" }));
         } else {
           await handleRequest({postData: {id, isDone: true}, path: `todos/${id}`, method: 'PATCH'})
           // dispatch(addTodo({ id, todo, isDone: true, comingFrom: "completedTodos" }));
+          dispatch(removeTodo({ id: todos[source.index].id, comingFrom: "todos" }));
           toast.success("Todo is now completed. Congratulation")
-          await getTodos()
+          // await getTodos()
         }
       }
-      dispatch(removeTodo({ id: todos[source.index].id, comingFrom: "todos" }));
+    
     } else {
       let { id, todo } = completedTodos[destination.index];
 
       if (destination.droppableId === "TodosList") {
         if(!token) {
           dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
-          
+          dispatch(
+            removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
+          );
         } else {
           await handleRequest({postData: {id, isDone: false}, path: `todos/${id}`, method: 'PATCH'})
           // dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
-          toast.info("Todo is no completed")
-          await getTodos()
+          dispatch(
+            removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
+            );
+            toast.info("Todo is not completed")
+          // await getTodos()
+
         }
      
       }
       
-         dispatch(
-           removeTodo({ id: completedTodos[source.index].id, comingFrom: "completedTodos" })
-         );
+        
       
     }
   };
