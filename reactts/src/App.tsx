@@ -98,7 +98,16 @@ const App: React.FC = () => {
       if (destination.droppableId === "ProgressList") {
         dispatch(addTodo({ id, todo, isDone: false, comingFrom: "progressTodos" }));
       } else if (destination.droppableId === "TodosList") {
-        dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
+        if(!token) {
+          dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
+          
+        } else {
+          dispatch(addTodo({ id, todo, isDone: false, comingFrom: "todos" }));
+          await handleRequest({postData: {id, isDone: false}, path: `todos/${id}`, method: 'PATCH'})
+          await getTodos()
+        }
+     
+     
       }
       
       dispatch(
