@@ -3,7 +3,7 @@ import { allStateTypeTodos, AddTodo, EditTodoI } from "../model";
 import { addHelper, editHelper, removeHelper, doneHelper } from "./helpers";
 
 
-export const apiRoute = 'https://taskcytodo.deta.dev'
+export const apiRoute = 'https://taskcyapi.herokuapp.com'
 
 export const add = (state: allStateTypeTodos, action: PayloadAction<AddTodo>) => {
     const {payload} = action
